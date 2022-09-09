@@ -1,0 +1,87 @@
+kind: pipeline
+type: docker
+name: build
+
+trigger:
+  event:
+    - push
+    - tag
+    - pull_request
+
+steps:
+  - name: tidy
+    image: golang:1.19.1
+    commands:
+      - go mod tidy
+      - git diff --exit-code -- go.mod go.sum
+    depends_on: [clone]
+
+  - name: lint
+    image: golangci/golangci-lint:v1.49.0
+    commands:
+      - golangci-lint run -v -E gofmt
+    depends_on: [clone]
+
+  - name: vet
+    image: golang:1.19.1
+    commands:
+      - go vet -race ./...
+    depends_on: [clone]
+
+  - name: build
+    image: golang:1.19.1
+    commands:
+      - go build -race .
+    depends_on: [clone]
+
+  - name: gosec
+    image: securego/gosec:2.13.1
+    commands:
+      - gosec -tests ./...
+    depends_on: [clone]
+---
+kind: pipeline
+type: docker
+name: test
+
+trigger:
+  event:
+    - push
+    - tag
+
+steps:
+  - name: test
+    image: golang:1.19.1
+    commands:
+      - go test -v -race ./...
+---
+kind: pipeline
+type: docker
+name: vulnerabilities
+
+trigger:
+  event:
+    - push
+    - tag
+    - pull_request
+    - cron
+
+steps:
+  - name: vulnerabilities
+    image: golang:1.19.1
+    commands:
+      - go install golang.org/x/vuln/cmd/govulncheck@latest
+      - govulncheck -test ./...
+  - name: webhook
+    image: plugins/webhook
+    when:
+      event:
+        exclude:
+          - pull_request
+      status:
+        - failure
+    settings:
+      urls:
+        from_secret: vulnerabilities_webhook_url
+      content_type: application/json
+      template: '{"content":"Vulnerabilities found during Build: {{ build.link }}"}'
