@@ -1,3 +1,3 @@
-module github.com/ctii/gitsum
+module github.com/ctII/gitsum
 
 go 1.18
