@@ -46,7 +46,7 @@ func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 		go func(w walker) {
 			err := filepath.WalkDir(path, w.walkFunc)
 			if err != nil {
-				log.Printf("could not walkdir (%w)", err)
+				log.Printf("could not walkdir (%v)", err)
 			}
 			w.wg.Done()
 		}(wkr)
