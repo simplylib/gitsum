@@ -19,7 +19,7 @@ func Main() error {
 	verbose := flag.Bool("v", false, "be verbose")
 	help := flag.Bool("help", false, "show help message")
 	flag.CommandLine.Usage = func() {
-		fmt.Fprintln(flag.CommandLine.Output(), "Usage: gitsum <flags> [path]")
+		fmt.Fprintln(flag.CommandLine.Output(), "Usage: "+os.Args[0]+" <flags> [path]")
 		flag.CommandLine.PrintDefaults()
 	}
 	flag.Parse()
