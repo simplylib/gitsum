@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/ctII/gitsum/cmd"
+	"github.com/simplylib/gitsum/cmd"
 )
 
 func main() {

@@ -1,12 +1,10 @@
 # gitsum
 
-[![Build Status](https://cloud.drone.io/api/badges/ctII/gitsum/status.svg)](https://cloud.drone.io/ctII/gitsum)
-[![Go Reference](https://pkg.go.dev/badge/github.com/ctII/gitsum.svg)](https://pkg.go.dev/github.com/ctII/gitsum)
-[![Go Report Card](https://goreportcard.com/badge/github.com/ctII/gitsum)](https://goreportcard.com/report/github.com/ctII/gitsum)
+[![Build Status](https://cloud.drone.io/api/badges/simplylib/gitsum/status.svg)](https://cloud.drone.io/simplylib/gitsum)
+[![Go Reference](https://pkg.go.dev/badge/github.com/simplylib/gitsum.svg)](https://pkg.go.dev/github.com/simplylib/gitsum)
+[![Go Report Card](https://goreportcard.com/badge/github.com/simplylib/gitsum)](https://goreportcard.com/report/github.com/simplylib/gitsum)
 
 gitsum is a cli tool for finding information about large number of git repositories in one shot, fairly quickly.
-
-largely built for the personal need to save work before switching computers
 
 ## Installing
 
@@ -15,7 +13,7 @@ largely built for the personal need to save work before switching computers
 
 
 ```
-go install github.com/ctii/gitsum@latest
+go install github.com/simplylib/gitsum@latest
 ```
 
 ## Usage

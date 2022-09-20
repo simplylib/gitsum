@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ctII/gitsum/git"
+	"github.com/simplylib/gitsum/git"
 )
 
 // Main starts the cli of gitsum.
