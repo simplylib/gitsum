@@ -21,6 +21,8 @@ type walker struct {
 
 func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 	if err != nil {
+		// todo: we are intentially ignoring errors here, but likely should pass
+		// these errors to some logger from caller
 		return nil
 	}
 
