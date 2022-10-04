@@ -28,3 +28,7 @@ Usage: gitsum <flags> [path]
 Currently gitsum:
 * checks every folder in the current directory recursively, skipping subdirectories of a valid git repo.
 * reports a repo as modified if: contains untracked files or changes in current branch || a branch has unpushed commits (this triggers on branches that have no upstream)
+
+## Output
+
+paths are relative to current directory if run in current directory, otherwise fullpath 

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io/fs"
 	"log"
+	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -14,9 +16,10 @@ type repoList struct {
 }
 
 type walker struct {
-	wg       *sync.WaitGroup
-	list     *repoList
-	filePath string
+	wg         *sync.WaitGroup
+	list       *repoList
+	filePath   string
+	workingDir string
 }
 
 func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
@@ -63,7 +66,13 @@ func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 
 	if modified {
 		w.list.Lock()
-		w.list.repos = append(w.list.repos, entry.Name())
+
+		if strings.HasPrefix(path, w.workingDir) {
+			w.list.repos = append(w.list.repos, strings.TrimPrefix(path, w.workingDir+string(filepath.Separator)))
+		} else {
+			w.list.repos = append(w.list.repos, path)
+		}
+
 		w.list.Unlock()
 	}
 
@@ -75,13 +84,19 @@ func WalkDirForModifiedRepos(filePath string, verbose bool) ([]string, error) {
 	wg := &sync.WaitGroup{}
 	repoList := &repoList{}
 
-	wkr := walker{
-		wg:       wg,
-		list:     repoList,
-		filePath: filePath,
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("could not get current directory (%w)", err)
 	}
 
-	err := filepath.WalkDir(filePath, wkr.walkFunc)
+	wkr := walker{
+		wg:         wg,
+		list:       repoList,
+		filePath:   filePath,
+		workingDir: wd,
+	}
+
+	err = filepath.WalkDir(filePath, wkr.walkFunc)
 	if err != nil {
 		return nil, fmt.Errorf("could not filepath.WalkDir (%w)", err)
 	}
