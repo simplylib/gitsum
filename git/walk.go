@@ -24,7 +24,7 @@ type walker struct {
 
 func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 	if err != nil {
-		return nil
+		return fmt.Errorf("error during walkFunc (%w)", err)
 	}
 
 	if !entry.IsDir() {
