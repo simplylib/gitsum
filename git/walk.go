@@ -64,13 +64,7 @@ func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 
 	if modified {
 		w.list.Lock()
-
-		if strings.HasPrefix(path, w.workingDir) {
-			w.list.repos = append(w.list.repos, strings.TrimPrefix(path, w.workingDir+string(filepath.Separator)))
-		} else {
-			w.list.repos = append(w.list.repos, path)
-		}
-
+		w.list.repos = append(w.list.repos, strings.TrimPrefix(path, w.workingDir+string(filepath.Separator)))
 		w.list.Unlock()
 	}
 
