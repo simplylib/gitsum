@@ -12,6 +12,8 @@ import (
 	"github.com/simplylib/gitsum/git"
 )
 
+var ErrPathNotADirectory = errors.New("path is not a directory")
+
 // Main starts the cli of gitsum.
 func Main() error {
 	log.Default().SetFlags(0)
@@ -48,7 +50,7 @@ func Main() error {
 	}
 
 	if !stat.IsDir() {
-		return errors.New("path is not a directory")
+		return ErrPathNotADirectory
 	}
 
 	repos, err := git.WalkDirForModifiedRepos(repoPath, *verbose)
