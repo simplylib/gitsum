@@ -24,8 +24,6 @@ type walker struct {
 
 func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 	if err != nil {
-		// todo: we are intentially ignoring errors here, but likely should pass
-		// these errors to some logger from caller
 		return nil
 	}
 
@@ -49,11 +47,11 @@ func (w *walker) walkFunc(path string, entry fs.DirEntry, err error) error {
 		wkr.filePath = path
 
 		go func(w walker) {
-			err := filepath.WalkDir(path, w.walkFunc)
-			if err != nil {
+			defer w.wg.Done()
+
+			if err := filepath.WalkDir(path, w.walkFunc); err != nil {
 				log.Printf("could not walkdir (%v)", err)
 			}
-			w.wg.Done()
 		}(wkr)
 
 		return filepath.SkipDir
